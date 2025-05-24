@@ -1,0 +1,9 @@
+face-recognition         # latest stable with wheels :contentReference[oaicite:7]{index=7}
+fastapi
+uvicorn
+python-dotenv
+Pillow
+cryptography
+numpy
+python-multipart
+//sqlitecloud
