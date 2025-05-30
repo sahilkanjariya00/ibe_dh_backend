@@ -3,7 +3,9 @@ import sqlite3
 import os
 
 def create_connection():
-    conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES)
+    db_path = os.getenv("DATABASE_PATH", "database.db")
+    conn = sqlite3.connect(db_path, detect_types=sqlite3.PARSE_DECLTYPES)
+    # conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES)
     conn.execute("PRAGMA foreign_keys=1")
     return conn
 #     db_url = os.getenv("DATABASE_URL", "sqlite:///./database.db")

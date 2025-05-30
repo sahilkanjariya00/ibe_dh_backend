@@ -6,4 +6,3 @@ Pillow
 cryptography
 numpy
 python-multipart
-//sqlitecloud
