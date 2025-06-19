@@ -1,25 +1,25 @@
-# Use official Python image
-FROM python:3.10-slim
-
-# Install system dependencies for dlib
-RUN apt update && apt install -y \
-    build-essential cmake libboost-all-dev \
-    libopenblas-dev liblapack-dev \
-    libx11-dev libgtk-3-dev \
-    && apt clean
+FROM continuumio/miniconda3:latest
 
 # Set working directory
 WORKDIR /app
-
-# Copy project files
 COPY . .
 
-# Install Python dependencies
-RUN pip install --upgrade pip \
-    && pip install -r requirements.txt
+# Create Conda environment
+RUN conda create -n facerec-env python=3.10 -y && \
+    conda install -n facerec-env -c conda-forge \
+        dlib \
+        face_recognition \
+        numpy=1.26.4 \
+        pillow=11.2.1 \
+        fastapi \
+        uvicorn \
+        python-dotenv \
+        python-multipart \
+        cryptography -y
 
-# Expose the port FastAPI runs on
+# Install pip-only packages using conda-run
+RUN conda run -n facerec-env pip install click
+
+# Use conda-run to execute the app
 EXPOSE 8000
-
-# Run the app
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["conda", "run", "--no-capture-output", "-n", "facerec-env", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
